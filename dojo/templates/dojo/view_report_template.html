@@ -1,0 +1,110 @@
+{% extends "base.html" %}                                                                                                                                                                                   
+{% load navigation_tags %}                                                                                                                                                                                  
+{% load authorization_tags %}                                                                                                                                                                               
+{% block content %}                                                                                                                                                                                         
+    {{ block.super }}                                                                                                                                                                                       
+    <div class="row">                                                                                                                                                                                       
+        <div class="col-md-12">                                                                                                                                                                             
+            <div class="panel panel-default">                                                                                                                                                               
+                <div class="panel-heading tight">                                                                                                                                                           
+                    <h3 class="has-filters">                                                                                                                                                                
+                        Report Templates                                                                                                                                                                    
+                        {% if "dojo.add_report_template"|has_configuration_permission:"superuser" %}                                                                                                        
+                        <div class="dropdown pull-right">                                                                                                                                                   
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1"                                                                                                
+                                    data-toggle="dropdown" aria-expanded="true">                                                                                                                            
+                                <span class="fa fa-wrench"></span>                                                                                                                                          
+                                <span class="caret"></span>                                                                                                                                                 
+                            </button>                                                                                                                                                                       
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu"                                                                                                                       
+                                aria-labelledby="dropdownMenu1">                                                                                                                                            
+                                    <li role="presentation">                                                                                                                                                
+                                        <a href="{% url 'add_report_template' %}">                                                                                                                          
+                                            <i class="fa fa-plus"></i> Add report template                                                                                                                  
+                                        </a>                                                                                                                                                                
+                                    </li>                                                                                                                                                                   
+                            </ul>                                                                                                                                                                           
+                        </div>                                                                                                                                                                              
+                        {% endif %}                                                                                                                                                                         
+                    </h3>                                                                                                                                                                                   
+                </div>                                                                                                                                                                                      
+
+            </div>                                                                                                                                                                                          
+            <div class="clearfix">                                                                                                                                                                          
+                {% include "dojo/paging_snippet.html" with page=users page_size=True %}                                                                                                                     
+            </div>
+			<div class="panel panel-default table-responsive">                                                                                                                                              
+                <table id="users"                                                                                                                                                                           
+                    class="tablesorter-bootstrap table table-condensed table-striped">                                                                                                                      
+                    <tr>                                                                                                                                                                                    
+                        <th></th>                                                                                                                                                                           
+                        <th class="nowrap">Name</th>                                                                                                                                                        
+                        <th class="nowrap">Description</th>                                                                                                                                                 
+                        <th class="nowrap">Format</th>                                                                                                                                                      
+                    </tr>                                                                                                                                                                                   
+                    <tr>                                                                                                                                                                                    
+                        <td></td>                                                                                                                                                                           
+                        <td>HTML</td>                                                                                                                                                                       
+                        <td>Default HTML report template.</td>                                                                                                                                              
+                        <td>HTML</td>                                                                                                                                                                       
+                    </tr>                                                                                                                                                                                   
+                    <tr>                                                                                                                                                                                    
+                        <td></td>                                                                                                                                                                           
+                        <td>AsciiDoc</td>                                                                                                                                                                   
+                        <td>Default AsciiDoc report template.</td>                                                                                                                                          
+                        <td>AsciiDoc</td>                                                                                                                                                                   
+                    </tr>                                                                                                                                                                                   
+                    {% for template in templates %}                                                                                                                                                         
+                        <tr>                                                                                                                                                                                
+                            <td>                                                                                                                                                                            
+                                <ul>                                                                                                                                                                        
+                                    <li class="dropdown" style="list-style:none;position:absolute">                                                                                                         
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" id="dropdownMenuReportTemplate">&nbsp;<b class="fa fa-ellipsis-v"></b>&nbsp;</a>    
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuReportTemplate">                                                                                 
+                                            {% if "dojo.edit_report_template"|has_configuration_permission:"superuser" %}                                                                                   
+                                            <li role="presentation">                                                                                                                                        
+                                              <a href="{% url 'edit_report_template' template.id %}">                                                                                                       
+                                                <i class="fa fa-pencil-square-o"></i> Edit</a>                                                                                                              
+                                            </li>                                                                                                                                                           
+                                            {% endif %}                                                                                                                                                     
+                                            <li role="presentation">                                                                                                                                        
+                                                <a href="{{ template.file.url }}">                                                                                                                          
+                                                <i class="fa fa-download"></i> Download</a>                                                                                                                 
+                                            </li>                                                                                                                                                           
+                                            {% if "dojo.delete_report_template"|has_configuration_permission:"superuser" %}                                                                                 
+                                            <li role="separator" class="divider"></li>                                                                                                                      
+                                            <li role="presentation">                                                                                                                                        
+                                              <a href="{% url 'delete_report_template' template.id %}">                                                                                                     
+                                                <i class="fa fa-trash"></i> Delete</a>                                                                                                                      
+                                            </li>                                                                                                                                                           
+                                            {% endif %}                                                                                                                                                     
+                                        </ul>
+                                    </li>                                                                                                                                                                   
+                                </ul>                                                                                                                                                                       
+                            </td>                                                                                                                                                                           
+                            <td>                                                                                                                                                                            
+                                    {{ template.name }}                                                                                                                                                     
+                            </td>                                                                                                                                                                           
+                            <td>                                                                                                                                                                            
+                                    {{ template.description }}                                                                                                                                              
+                            </td>                                                                                                                                                                           
+                            <td>                                                                                                                                                                            
+                                    {{ template.template_format }}                                                                                                                                          
+                            </td>                                                                                                                                                                           
+                            {# <td><a href="{% url 'view_user' u.id %}">{{ u.first_name }}</a></td> #}                                                                                                      
+                            {# <td><a href="{% url 'view_user' u.id %}">{{ u.last_name }}</a></td> #}                                                                                                       
+                            {# <td><a href="{% url 'view_user' u.id %}">{{ u.last_name }}</a></td> #}                                                                                                       
+                            </tr>                                                                                                                                                                           
+                    {% endfor %}                                                                                                                                                                            
+                </table>                                                                                                                                                                                    
+            </div>                                                                                                                                                                                          
+            <div class="clearfix">                                                                                                                                                                          
+                {% include "dojo/paging_snippet.html" with page=users page_size=True %}                                                                                                                     
+            </div>                                                                                                                                                                                          
+        </div>                                                                                                                                                                                              
+    </div>                                                                                                                                                                                                  
+{% endblock %}                                                                                                                                                                                              
+{% block postscript %}                                                                                                                                                                                      
+    {{ block.super }}                                                                                                                                                                                       
+    {% include "dojo/filter_js_snippet.html" %}                                                                                                                                                             
+{% endblock %}

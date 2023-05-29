@@ -124,6 +124,11 @@ class Permissions(IntEnum):
     Credential_Edit = 2706
     Credential_Delete = 2707
 
+    Report_Template_View = 2801                                                                                                                                                                             
+    Report_Template_Add = 2802                                                                                                                                                                              
+    Report_Template_Edit = 2803                                                                                                                                                                             
+    Report_Template_Delete = 2804
+
     @classmethod
     def has_value(cls, value):
         try:
@@ -264,6 +269,10 @@ class Permissions(IntEnum):
             Permissions.Credential_Edit,
             Permissions.Credential_Delete}
 
+    @classmethod                                                                                                                                                                                            
+    def get_report_template_permissions(cls):                                                                                                                                                               
+        return {Permissions.Report_Template_View, Permissions.Report_Template_Add, Permissions.Report_Template_Edit, Permissions.Report_Template_Delete}
+
 
 def get_roles_with_permissions():
     return {
@@ -285,6 +294,7 @@ def get_roles_with_permissions():
             Permissions.Product_API_Scan_Configuration_View,
             Permissions.Product_Tracking_Files_View,
             Permissions.Credential_View,
+            Permissions.Report_Template_View,
         },
         Roles.API_Importer: {
             Permissions.Product_Type_View,
@@ -302,6 +312,7 @@ def get_roles_with_permissions():
             Permissions.Technology_View,
             Permissions.Import_Scan_Result,
             Permissions.Credential_View,
+            Permissions.Report_Template_View,
         },
         Roles.Writer: {
             Permissions.Product_Type_View,
@@ -359,6 +370,10 @@ def get_roles_with_permissions():
             Permissions.Credential_View,
             Permissions.Credential_Add,
             Permissions.Credential_Edit,
+
+            Permissions.Report_Template_View,
+            Permissions.Report_Template_Add,
+            Permissions.Report_Template_Edit,
         },
         Roles.Maintainer: {
             Permissions.Product_Type_Add_Product,
@@ -449,6 +464,11 @@ def get_roles_with_permissions():
             Permissions.Credential_Add,
             Permissions.Credential_Edit,
             Permissions.Credential_Delete,
+
+            Permissions.Report_Template_View,
+            Permissions.Report_Template_Add,
+            Permissions.Report_Template_Edit,
+            Permissions.Report_Template_Delete,
         },
         Roles.Owner: {
             Permissions.Product_Type_Add_Product,
@@ -547,6 +567,11 @@ def get_roles_with_permissions():
             Permissions.Credential_Add,
             Permissions.Credential_Edit,
             Permissions.Credential_Delete,
+
+            Permissions.Report_Template_View,
+            Permissions.Report_Template_Add,
+            Permissions.Report_Template_Edit,
+            Permissions.Report_Template_Delete,
         }
     }
 

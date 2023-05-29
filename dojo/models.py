@@ -245,6 +245,16 @@ class Role(models.Model):
         ordering = ('name',)
 
 
+class Report_Template(models.Model):                                                                                                                                                                        
+    name = models.CharField(max_length=255, unique=True)                                                                                                                                                    
+    description = models.CharField(max_length=2000, default='', blank=True)                                                                                                                                 
+    template_format = models.CharField(max_length=80, null=True)                                                                                                                                            
+    file = models.FileField(upload_to=UniqueUploadNameProvider('report_templates', keep_basename=True), null=True, blank=True)                                                                              
+
+    def __str__(self):                                                                                                                                                                                      
+        return self.name
+
+
 class System_Settings(models.Model):
     enable_auditlog = models.BooleanField(
         default=True,
@@ -4220,3 +4230,4 @@ admin.site.register(General_Survey)
 admin.site.register(Test_Import)
 admin.site.register(Test_Import_Finding_Action)
 admin.site.register(Finding_Group)
+admin.site.register(Report_Template)

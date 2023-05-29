@@ -13,7 +13,7 @@ from django.contrib.auth.models import Permission
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.forms import modelformset_factory
-from django.forms.widgets import Widget, Select
+from django.forms.widgets import Widget, Select, FileInput
 from django.utils.dates import MONTHS
 from django.utils.safestring import mark_safe
 from django.utils import timezone
@@ -32,7 +32,7 @@ from dojo.models import Announcement, Finding, Finding_Group, Product_Type, Prod
     Engagement_Survey, Answered_Survey, TextAnswer, ChoiceAnswer, Choice, Question, TextQuestion, \
     ChoiceQuestion, General_Survey, Regulation, FileUpload, SEVERITY_CHOICES, Product_Type_Member, \
     Product_Member, Global_Role, Dojo_Group, Product_Group, Product_Type_Group, Dojo_Group_Member, \
-    Product_API_Scan_Configuration
+    Product_API_Scan_Configuration, Report_Template
 
 from dojo.tools.factory import requires_file, get_choices_sorted, requires_tool_type
 from django.urls import reverse
@@ -2091,6 +2091,10 @@ class ReportOptionsForm(forms.Form):
     include_disclaimer = forms.ChoiceField(choices=yes_no, label="Disclaimer")
     report_type = forms.ChoiceField(choices=(('HTML', 'HTML'), ('AsciiDoc', 'AsciiDoc')))
 
+    def __init__(self, *args, **kwargs):                                                                                                                                                                    
+        super(ReportOptionsForm, self).__init__(*args, **kwargs)                                                                                                                                            
+        self.fields['report_type'].choices += tuple([(_.name, _.name) for _ in Report_Template.objects.order_by('pk')])
+
 
 class CustomReportOptionsForm(forms.Form):
     yes_no = (('0', 'No'), ('1', 'Yes'))
@@ -3338,3 +3342,19 @@ class ConfigurationPermissionsForm(forms.Form):
                 self.group.auth_group.permissions.remove(self.permissions[codename])
             else:
                 raise Exception('Neither user or group are set')
+
+
+class ReportTemplateForm(forms.ModelForm):                                                                                                                                                                  
+    FORMAT_CHOICES = (                                                                                                                                                                                      
+        ('Jinja2-DOCX', 'Jinja2 DOCX'),                                                                                                                                                                     
+    )                                                                                                                                                                                                       
+    template_format = forms.ChoiceField(choices=FORMAT_CHOICES)                                                                                                                                             
+    file = forms.FileField(widget=FileInput)                                                                                                                                                                
+
+    class Meta:                                                                                                                                                                                             
+        model = Report_Template                                                                                                                                                                             
+        fields = ('name', 'description', 'template_format', 'file')                                                                                                                                         
+
+    def __init__(self, *args, **kwargs):                                                                                                                                                                    
+        super(ReportTemplateForm, self).__init__(*args, **kwargs)                                                                                                                                           
+        self.fields['description'].required = False

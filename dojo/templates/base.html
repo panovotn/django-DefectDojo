@@ -559,6 +559,13 @@
                                                         </a>
                                                     </li>
                                                 {% endif %}
+                                                {% if "dojo.view_report_template"|has_configuration_permission:request %}
+                                                    <li>
+                                                        <a href="{% url 'view_report_template' %}">
+                                                            {% trans "Report Templates" %}
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
                                                 {% if "dojo.view_tool_configuration"|has_configuration_permission:request %}
                                                     <li>
                                                         <a href="{% url 'tool_config' %}">

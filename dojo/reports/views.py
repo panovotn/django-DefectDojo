@@ -18,7 +18,7 @@ from dojo.filters import ReportFindingFilter, EndpointReportFilter, \
     EndpointFilter
 from dojo.forms import ReportOptionsForm
 from dojo.models import Product_Type, Finding, Product, Engagement, Test, \
-    Dojo_User, Endpoint, Risk_Acceptance
+    Dojo_User, Endpoint, Risk_Acceptance, Report_Template
 from dojo.reports.widgets import CoverPage, PageBreak, TableOfContents, WYSIWYGContent, FindingList, EndpointList, \
     CustomReportJsonForm, ReportOptions, report_widget_factory
 from dojo.utils import get_page_items, add_breadcrumb, get_system_setting, get_period_counts_legacy, Product_Tab, \
@@ -28,6 +28,7 @@ from dojo.authorization.roles_permissions import Permissions
 from dojo.authorization.authorization import user_has_permission_or_403
 from dojo.finding.queries import get_authorized_findings
 from dojo.finding.views import get_filtered_findings
+from dojo.report_template.views import custom_report_template_render
 
 logger = logging.getLogger(__name__)
 
@@ -640,7 +641,31 @@ def generate_report(request, obj, host_view=False):
                            'host_view': host_view,
                            'context': context,
                            })
-
+        elif Report_Template.objects.filter(name=report_format).exists():                                                                                                                                   
+            return custom_report_template_render(request,                                                                                                                                                   
+                                                 Report_Template.objects.get(name=report_format),                                                                                                           
+                                                 {'product_type': product_type,                                                                                                                             
+                                                  'product': product,                                                                                                                                       
+                                                  'engagement': engagement,                                                                                                                                 
+                                                  'report_name': report_name,                                                                                                                               
+                                                  'test': test,                                                                                                                                             
+                                                  'endpoint': endpoint,                                                                                                                                     
+                                                  'endpoints': endpoints,                                                                                                                                   
+                                                  'findings': findings.qs.distinct().order_by('numerical_severity'),                                                                                        
+                                                  'include_finding_notes': include_finding_notes,                                                                                                           
+                                                  'include_finding_images': include_finding_images,                                                                                                         
+                                                  'include_executive_summary': include_executive_summary,                                                                                                   
+                                                  'include_table_of_contents': include_table_of_contents,                                                                                                   
+                                                  'include_disclaimer': include_disclaimer,                                                                                                                 
+                                                  'disclaimer': disclaimer,                                                                                                                                 
+                                                  'user': user,                                                                                                                                             
+                                                  'team_name': settings.TEAM_NAME,                                                                                                                          
+                                                  'title': report_title,                                                                                                                                    
+                                                  'user_id': request.user.id,                                                                                                                               
+                                                  'host': "",                                                                                                                                               
+                                                  'host_view': host_view,                                                                                                                                   
+                                                  'context': context,                                                                                                                                       
+                                                  })
         else:
             raise Http404()
     paged_findings = get_page_items(request, findings.qs.distinct().order_by('numerical_severity'), 25)
